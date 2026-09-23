@@ -3,8 +3,10 @@ import KingdomSceneV3 from './phaser/scenes/KingdomSceneV3.js';
 
 const DEBUG = import.meta.env.DEV;
 
-// Polling configuration
-const API_BASE = 'http://localhost:3001';
+// Polling configuration.
+// Relative base so the dashboard works wherever it is served: same-origin in
+// production (any PORT), and via Vite's /api proxy in dev (see vite.config.js).
+const API_BASE = '';
 const POLL_INTERVAL = 1000; // 1 second
 
 // Agent state tracking
