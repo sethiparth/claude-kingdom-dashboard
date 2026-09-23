@@ -1,0 +1,34 @@
+{
+  "name": "claude-kingdom-dashboard",
+  "version": "1.0.0",
+  "description": "Real-time visual dashboard for Claude Code sessions with Organic/Nature Office aesthetic",
+  "main": "server/index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "nodemon server/index.js",
+    "client": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "claude",
+    "dashboard",
+    "monitoring",
+    "phaser",
+    "game"
+  ],
+  "author": "King Bob",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
+    "express": "^4.18.2",
+    "phaser": "^3.60.0",
+    "sharp": "^0.35.4"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.0.2",
+    "vite": "^5.0.0"
+  }
+}

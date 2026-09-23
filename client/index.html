@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kingdom Dashboard - Organic Nature Office</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Organic/Natural aesthetic fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Organic/Nature Office Palette */
+      --sage-green: #8fa88e;
+      --forest-green: #5c6e5a;
+      --warm-beige: #e8dcc4;
+      --terracotta: #c97d60;
+      --clay: #a86f58;
+      --cream: #f5f1e8;
+      --bark: #4a4238;
+      --moss: #697d59;
+
+      /* Typography */
+      --font-display: 'Crimson Pro', serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: linear-gradient(135deg, var(--warm-beige) 0%, var(--cream) 100%);
+      color: var(--bark);
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    /* Watercolor texture overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image:
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" /><feColorMatrix values="0 0 0 0 0.55, 0 0 0 0 0.48, 0 0 0 0 0.35, 0 0 0 0.03 0"/></filter><rect width="100%" height="100%" filter="url(%23noise)"/></svg>');
+      opacity: 0.4;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    #game-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+    }
+
+    /* UI Overlay */
+    #ui-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 10;
+      font-family: var(--font-body);
+    }
+
+    .panel {
+      position: absolute;
+      background: rgba(245, 241, 232, 0.85);
+      backdrop-filter: blur(10px);
+      border: 2px solid var(--sage-green);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 8px 32px rgba(74, 66, 56, 0.1);
+      pointer-events: auto;
+    }
+
+    #kingdom-title {
+      bottom: 20px;
+      right: 20px;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(74, 66, 56, 0.8);
+      border: 2px solid rgba(143, 168, 142, 0.6);
+    }
+
+    #kingdom-title h1 {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--cream);
+      margin: 0;
+      letter-spacing: -0.02em;
+    }
+
+    .icon-button {
+      background: rgba(143, 168, 142, 0.4);
+      border: 2px solid rgba(143, 168, 142, 0.6);
+      border-radius: 8px;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .icon-button:hover {
+      background: var(--sage-green);
+      transform: scale(1.05);
+      border-color: var(--sage-green);
+    }
+
+    /* Popup windows */
+    .popup {
+      position: fixed;
+      background: rgba(245, 241, 232, 0.95);
+      backdrop-filter: blur(10px);
+      border: 2px solid var(--sage-green);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 8px 32px rgba(74, 66, 56, 0.2);
+      pointer-events: auto;
+      display: none;
+      z-index: 100;
+      max-width: 400px;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+
+    .popup.visible {
+      display: block;
+    }
+
+    .popup-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--sage-green);
+    }
+
+    .popup-title {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      color: var(--forest-green);
+      margin: 0;
+    }
+
+    .close-button {
+      background: var(--terracotta);
+      color: var(--cream);
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .close-button:hover {
+      background: var(--clay);
+      transform: scale(1.1);
+    }
+
+    #stats-popup {
+      top: 80px;
+      right: 20px;
+      min-width: 280px;
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(143, 168, 142, 0.3);
+    }
+
+    .stat-row:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: var(--moss);
+      font-weight: 500;
+    }
+
+    .stat-value {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--terracotta);
+    }
+
+    #activity-popup {
+      bottom: 80px;
+      left: 20px;
+      max-width: 400px;
+      max-height: 400px;
+    }
+
+    .activity-item {
+      font-size: 0.85rem;
+      color: var(--bark);
+      margin-bottom: 8px;
+      padding: 8px 12px;
+      background: rgba(143, 168, 142, 0.15);
+      border-radius: 8px;
+      border-left: 3px solid var(--sage-green);
+      animation: slideIn 0.3s ease-out;
+    }
+
+    .activity-item .emoji {
+      margin-right: 6px;
+    }
+
+    .activity-item .timestamp {
+      font-size: 0.75rem;
+      color: var(--moss);
+      margin-left: 8px;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* Loading screen */
+    #loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--warm-beige) 0%, var(--cream) 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      transition: opacity 0.5s ease-out;
+    }
+
+    #loading.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #loading h2 {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      color: var(--forest-green);
+      margin-bottom: 20px;
+    }
+
+    .loader {
+      width: 60px;
+      height: 60px;
+      border: 4px solid var(--sage-green);
+      border-top-color: var(--terracotta);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Custom scrollbar for popups */
+    .popup::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .popup::-webkit-scrollbar-track {
+      background: rgba(143, 168, 142, 0.1);
+      border-radius: 4px;
+    }
+
+    .popup::-webkit-scrollbar-thumb {
+      background: var(--sage-green);
+      border-radius: 4px;
+    }
+
+    .popup::-webkit-scrollbar-thumb:hover {
+      background: var(--forest-green);
+    }
+
+    /* Session Selector Overlay - Hidden (global view) */
+    #session-selector {
+      display: none;
+    }
+
+    #session-selector.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #session-selector-panel {
+      background: var(--cream);
+      border: 3px solid var(--sage-green);
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 600px;
+      max-height: 70vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(74, 66, 56, 0.3);
+    }
+
+    #session-selector-panel h2 {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      color: var(--forest-green);
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .session-item {
+      background: rgba(143, 168, 142, 0.15);
+      border: 2px solid var(--sage-green);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .session-item:hover {
+      background: rgba(143, 168, 142, 0.3);
+      border-color: var(--forest-green);
+      transform: translateX(4px);
+    }
+
+    .session-item-info {
+      flex: 1;
+    }
+
+    .session-item-id {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--bark);
+      margin-bottom: 4px;
+    }
+
+    .session-item-count {
+      font-size: 0.9rem;
+      color: var(--moss);
+    }
+
+    .session-item-badge {
+      background: var(--terracotta);
+      color: var(--cream);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    #back-button {
+      display: none;
+    }
+
+    #back-button:hover {
+      background: var(--sage-green);
+      color: var(--cream);
+      transform: translateX(-50%) translateY(-2px);
+      box-shadow: 0 6px 16px rgba(74, 66, 56, 0.3);
+    }
+
+    #back-button.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+  </style>
+</head>
+<body>
+  <!-- Loading screen -->
+  <div id="loading">
+    <h2>🌳 Growing your Kingdom...</h2>
+    <div class="loader"></div>
+  </div>
+
+  <!-- Phaser game canvas -->
+  <div id="game-container"></div>
+
+  <!-- Session Selector Overlay -->
+  <div id="session-selector">
+    <div id="session-selector-panel">
+      <h2>📂 Select Session</h2>
+      <div id="session-list"></div>
+    </div>
+  </div>
+
+  <!-- Back Button -->
+  <button id="back-button">← Back to All Sessions</button>
+
+  <!-- UI Overlay -->
+  <div id="ui-overlay">
+    <!-- Compact title with icon buttons -->
+    <div class="panel" id="kingdom-title">
+      <h1>👑 Kingdom</h1>
+      <button class="icon-button" id="refresh-button" title="Refresh from agent-status.json">🔄</button>
+      <button class="icon-button" id="stats-button" title="Stats">📊</button>
+      <button class="icon-button" id="activity-button" title="Activity">📜</button>
+    </div>
+
+    <!-- Stats popup -->
+    <div class="popup" id="stats-popup">
+      <div class="popup-header">
+        <h3 class="popup-title">📊 Stats</h3>
+        <button class="close-button" data-popup="stats-popup">✕</button>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Working Agents</span>
+        <span class="stat-value" id="agent-count">0</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Tasks Completed</span>
+        <span class="stat-value" id="completed-count">0</span>
+      </div>
+    </div>
+
+    <!-- Sessions popup (reuse existing session selector panel) -->
+
+    <!-- Activity popup -->
+    <div class="popup" id="activity-popup">
+      <div class="popup-header">
+        <h3 class="popup-title">📜 Recent Activity</h3>
+        <button class="close-button" data-popup="activity-popup">✕</button>
+      </div>
+      <div id="activity-list"></div>
+    </div>
+  </div>
+
+  <script type="module" src="/main.js"></script>
+</body>
+</html>
