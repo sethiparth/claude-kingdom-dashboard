@@ -9,6 +9,25 @@ session is an island; the main agent is **King Bob**, and the subagents he spawn
 appear, work, and leave. It runs entirely on your machine off a single status file that Claude Code
 hooks keep up to date — no accounts, no network calls, nothing leaves your laptop.
 
+![The kingdom — three live sessions as islands, linked by bridges](docs/screenshots/kingdom-overview.png)
+
+> *Three live Claude Code sessions rendered as islands. Each has its King Bob; villagers (subagents)
+> work in the houses; wooden bridges link neighbouring islands.*
+
+## What it is
+
+Claude Code can run many sessions at once, and each session can spawn a swarm of subagents — but a
+terminal gives you no sense of that shape. This dashboard turns the invisible into a **living map**:
+
+- You glance at it and instantly see **how many sessions are running**, **which one is busy**, and
+  **how many subagents each has spawned**.
+- It's **passive and read-only** — it never drives Claude, only mirrors it. Closing the dashboard
+  changes nothing about your sessions.
+- It's **local-first** — the only input is a JSON file on your own disk. No cloud, no login,
+  no telemetry.
+
+Think of it as a `htop` for your Claude Code fleet, drawn as a cozy top-down game.
+
 ## The kingdom
 
 - **King Bob** — the persona of the main agent in each session ("Chief Minion"). He resides on his
@@ -20,6 +39,33 @@ hooks keep up to date — no accounts, no network calls, nothing leaves your lap
 
 Sessions are laid out as a scattered archipelago with autotiled sand/grass coastlines, curved cobble
 roads linking the workspace houses, and wooden bridges between neighbouring islands.
+
+## The monitor — what you're looking at
+
+<img src="docs/screenshots/island-closeup.png" alt="One island up close — King Bob's throne, roads, and four working villagers" width="440" align="right" />
+
+Every element on the map maps to something real in your session:
+
+- **Island label** (the yellow tag) — the session's working directory name, so you can tell your
+  islands apart at a glance.
+- **King Bob's throne** — the centre of each island. Its presence means the main agent (the
+  top-level conversation) is alive.
+- **Villager + house** — one per running subagent. Each is labelled with its **agent type**
+  (`code-review`, `security-reviewer`, `tdd-guide`, `Explore`, …) and a fun in-kingdom name/role.
+  The villager animates according to the **tool it is currently running** (reading, editing,
+  searching, running a command).
+- **Cobble roads** — connect each villager's house back to King Bob's throne: the subagents
+  belong to that session.
+- **Wooden bridges** — link neighbouring islands, tying the archipelago into one kingdom.
+- **Rising / sinking islands** — start a session and an island rises from the sea; end it and the
+  island sinks. Villagers arrive when a subagent starts and depart when it finishes.
+- **Toolbar** (bottom-right) — refresh, a live stats panel (working-agent counts), and view
+  controls. You can also pan and zoom the map freely.
+
+The whole scene refreshes about once a second, so it stays in lock-step with what Claude Code is
+actually doing right now.
+
+<br clear="all" />
 
 ## How it works
 
@@ -121,6 +167,8 @@ claude-kingdom-dashboard/
 ├── setup.sh                # installs hooks + King Bob, merges settings.json
 ├── hooks/                  # the Claude Code hooks that drive the dashboard
 ├── assets/king-bob.png     # King Bob's portrait
+├── docs/screenshots/       # images used in this README
+├── kingdom/                # optional: persona rules + public plugin list
 ├── server/index.js         # Express: serves the build + GET /api/status
 ├── client/
 │   ├── index.html
