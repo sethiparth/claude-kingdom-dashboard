@@ -95,6 +95,17 @@ Copy `.env.example` to `.env` to override defaults:
 - `AGENT_STATUS_FILE` (default `~/.claude/agent-status.json`)
 - `CORS_ORIGIN` (default `*`)
 
+## Make Claude behave like the kingdom (optional)
+
+The dashboard only *shows* your sessions. If you also want your Claude to *act* like King Bob's
+kingdom, the [`kingdom/`](./kingdom) folder has two work-free extras:
+
+- **[`kingdom/global-CLAUDE.md`](./kingdom/global-CLAUDE.md)** — a sanitized version of the kingdom's
+  persona + working rules. Copy it into your global `~/.claude/CLAUDE.md` (merge by hand if you
+  already have one — don't overwrite).
+- **[`kingdom/PLUGINS.md`](./kingdom/PLUGINS.md)** — the public Claude Code plugins the kingdom uses,
+  with copy-paste `/plugin` install commands. All public; install what you actually use.
+
 ## Customizing
 
 - **Persona** — edit the `additionalContext` string in `hooks/session-start-kingdom.sh`, then

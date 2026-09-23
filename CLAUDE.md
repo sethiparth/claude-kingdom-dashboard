@@ -66,18 +66,21 @@ Run these in the repo root. Tell the user what each step does.
    restart) a session after `./setup.sh`. King Bob should appear on a fresh island within ~1s. Spawn
    a subagent and a villager joins him.
 
-## Optional: plugins that enrich the kingdom
+## Optional: make Claude behave like the kingdom
 
-The dashboard needs **none** of these — it runs on the hooks alone. But the King Bob experience is
-nicer with a fuller Claude Code setup. These are all public/general-purpose; add via
-`/plugin marketplace` in Claude Code, at the user's discretion:
+The dashboard needs none of this — it runs on the hooks alone. But two extras make a cloner's Claude
+feel like King Bob's kingdom, not just show it. Offer them; don't force them.
 
-- **everything-claude-code** — a broad agent/skill harness (many of the agent types the dashboard
-  visualizes come from packs like this).
-- **superpowers** — skill-driven workflows (brainstorming, systematic debugging, etc.).
-- **playwright** / **context7** — browser automation and live library docs.
+1. **Global working rules** — [`kingdom/global-CLAUDE.md`](./kingdom/global-CLAUDE.md) is a
+   sanitized, work-free version of the kingdom's persona + process rules. If the user wants it,
+   copy it into their global `~/.claude/CLAUDE.md`. **Never overwrite an existing
+   `~/.claude/CLAUDE.md`** — if one exists, merge the wanted parts by hand.
+2. **Public plugins & skills** — [`kingdom/PLUGINS.md`](./kingdom/PLUGINS.md) lists the public
+   Claude Code plugins the kingdom uses, with copy-paste `/plugin marketplace add` and
+   `/plugin install` commands. All public; the user installs at their discretion (integration
+   plugins need their own accounts/keys).
 
-Do not assume any private or work-specific plugins; only suggest public ones.
+Only ever suggest public plugins. Never assume private or employer-internal ones.
 
 ## Customizing your kingdom
 
